@@ -1,4 +1,4 @@
-package com.example.sendlocationsms;
+package com.example.sendlocationsmsbyrequest;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
-import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sendlocationsms">
+    package="com.example.sendlocationsmsbyrequest">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -12,11 +12,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SendLocationSms">
+        android:theme="@style/Theme.SendLocationSmsByRequest">
 
         <!-- это значит, что приемник работает даже если приложение не запущено -->
         <receiver
-            android:name=".SmsReceiver"
+            android:name="com.example.sendlocationsmsbyrequest.SmsReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -27,7 +27,7 @@
         <meta-data android:name="com.google.android.gms.version"
             />
 
-        <activity android:name=".MainActivity">
+        <activity android:name="com.example.sendlocationsmsbyrequest.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

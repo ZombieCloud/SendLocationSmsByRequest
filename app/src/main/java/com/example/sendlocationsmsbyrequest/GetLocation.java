@@ -1,12 +1,8 @@
-package com.example.sendlocationsms;
+package com.example.sendlocationsmsbyrequest;
 
-import android.app.Activity;
-import android.app.Application;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.location.Location;
 import android.os.Looper;
 import android.telephony.SmsManager;
@@ -16,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -26,10 +21,8 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -200,7 +193,6 @@ public class GetLocation{
 
             //  Отсылаем смс
             String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
-
             if (telNumber != null) {
                 SmsManager sms = SmsManager.getDefault();
                 sms.sendTextMessage(telNumber, null, msgLocation, PendingIntent.getBroadcast(

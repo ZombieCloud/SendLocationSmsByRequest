@@ -1,4 +1,4 @@
-package com.example.sendlocationsms;
+package com.example.sendlocationsmsbyrequest;
 
 import android.content.Context;
 
