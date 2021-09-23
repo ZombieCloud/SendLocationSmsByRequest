@@ -85,15 +85,12 @@ public class GetLocation{
     public String mLastUpdateTime = "";
 
 
-
-//    public Activity mainActivity;
     public String telNumber;
     public Context context;
     public GetLocation(String telNumber1, Context context1) {
 
         telNumber = telNumber1;
         context = context1;
-//        Toast.makeText(context, "Tel = " + telNumber, Toast.LENGTH_LONG).show();   //getApplicationContext
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         mSettingsClient = LocationServices.getSettingsClient(context);
@@ -148,24 +145,14 @@ public class GetLocation{
                         int statusCode = ((ApiException) e).getStatusCode();
                         switch (statusCode) {
                             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-//                                Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade location settings ");
-
-                                sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
-                                        context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
-
-                                break;
                             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-//                                String errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings.";
-//                                Log.e(TAG, errorMessage);
-//                                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
 
                                 sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
                                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
 
                                 mRequestingLocationUpdates = false;
+                                break;
                         }
-
-//                        updateUI();
                     }
                 }
                 );
@@ -250,23 +237,10 @@ public class GetLocation{
 
     private void stopLocationUpdates() {
         if (!mRequestingLocationUpdates) {
-            Log.d(TAG, "stopLocationUpdates: updates never requested, no-op.");
-
             return;
         }
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         mRequestingLocationUpdates = false;
-
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
-//        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
-//                .addOnCompleteListener(getParent(), new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        mRequestingLocationUpdates = false;
-//                    }
-//                });
     }
 
 

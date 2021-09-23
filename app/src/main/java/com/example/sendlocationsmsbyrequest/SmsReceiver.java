@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SmsReceiver extends BroadcastReceiver {
 
@@ -49,21 +50,13 @@ public class SmsReceiver extends BroadcastReceiver {
                     strMessage += "SMS from " + msgs[i].getOriginatingAddress();
                     strMessage += " :" + msgs[i].getMessageBody() + "\n";
 
-                    // Log and display the SMS message.
-//                    Log.d(TAG, "PRIVETTT_8: " + strMessage);
-//                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+                    // display the SMS message.
+                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
 
-                    // Стартуем MainActivity, при старте определяем координаты и ответная смс
+                    // определяем координаты и ответная смс
                     String keyString = "WhereAreYouuu";
                     if (msgs[i].getMessageBody().toLowerCase().contains(keyString.toLowerCase())) {
                         GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context);
-
-
-//                        Intent mIntent = new Intent(context, MainActivity.class);
-//                        mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME | Intent.FLAG_ACTIVITY_CLEAR_TASK);   // FLAG_ACTIVITY_CLEAR_TASK - для того, чтоб MainActivity рестартовалась при каждой смс
-//                        mIntent.putExtra("STR_TEL_NUMBER", msgs[i].getOriginatingAddress());
-//                        mIntent.putExtra("STR_MESSAGE", msgs[i].getMessageBody());
-//                        context.startActivity(mIntent);
                     }
                 }
         }
@@ -72,7 +65,5 @@ public class SmsReceiver extends BroadcastReceiver {
                             Log.d("Exception caught",e.getMessage());
         }
 
-
-//        throw new UnsupportedOperationException("Not yet implemented");   // privet
     }
 }

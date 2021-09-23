@@ -2,16 +2,18 @@ package com.example.sendlocationsmsbyrequest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActivityManager;
-import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.content.Context;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btnStartStop;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private SmsReceiver smsReceiver = new SmsReceiver();
+    private Boolean isServiceRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,34 +21,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnStartStop = (Button) findViewById(R.id.btnStartStop);
-
-        if (isServiceRunning(SmsReceiver.class)) {
-            btnStartStop.setText("Stop");
-        } else {
-            btnStartStop.setText("Start");
-        }
-//        finish();
+        btnStartStop.setText("Start");
+        isServiceRunning = false;
     }
 
     public void btnStartStop_OnClick(View v) throws InterruptedException{
-        if (isServiceRunning(SmsReceiver.class)) {
-            stopService(new Intent(this, SmsReceiver.class));
+        if (isServiceRunning) {
+            unregisterBroadcastReceiver();
             btnStartStop.setText("Start");
         } else {
-            startService(new Intent(this, SmsReceiver.class));
+            registerBroadcastReceiver();
             btnStartStop.setText("Stop");
         }
     }
 
 
-    private boolean isServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    public void registerBroadcastReceiver() {
+        this.registerReceiver(smsReceiver, new IntentFilter(
+                "android.provider.Telephony.SMS_RECEIVED"));
+        Toast.makeText(getApplicationContext(), "Started",
+                Toast.LENGTH_SHORT).show();
+        isServiceRunning = true;
+    }
+
+
+    public void unregisterBroadcastReceiver() {
+        this.unregisterReceiver(smsReceiver);
+        Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_SHORT).show();
+        isServiceRunning = false;
     }
 
 }
