@@ -8,31 +8,52 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     Button btnStartStop;
+    TextView tvSecretWord;
     private static final String TAG = MainActivity.class.getSimpleName();
     private SmsReceiver smsReceiver = new SmsReceiver();
     private Boolean isServiceRunning;
     private int MY_KEY_FOR_RETURNED_VALUE = 0;
+    private SharedPreferences settings;             // хранилище переменных
+    private SharedPreferences.Editor editor;
+    private String secretWord;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnStartStop = (Button) findViewById(R.id.btnStartStop);
+        btnStartStop = findViewById(R.id.btnStartStop);
+        tvSecretWord = findViewById(R.id.tvSecretWord);
         btnStartStop.setText("Start");
         isServiceRunning = false;
+
+        settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_PRIVATE);  // инициируем хранилище переменных
+        editor = settings.edit();
+        secretWord = settings.getString( "secretWord", null);    // достаем переменную из хранилища
+
+        if (secretWord == null) {
+            editor.putString( "secretWord", "put secret word here");   // положить переменную в хранилище
+            editor.commit();
+            secretWord = "put secret word here";
+        }
+        tvSecretWord.setText(secretWord);
     }
+
+
 
     public void btnStartStop_OnClick(View v) throws InterruptedException{
 
@@ -76,21 +97,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (isServiceRunning) {
-            unregisterBroadcastReceiver();
+//            unregisterBroadcastReceiver();       // так можно остановить broadcast receiver, запущенный из activity
             btnStartStop.setText("Start");
+            Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_SHORT).show();
         } else {
-            registerBroadcastReceiver();
+//            registerBroadcastReceiver();     // так можно запустить broadcast receiver из activity. Жить будет пока жива activity
             btnStartStop.setText("Stop");
+            Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
         }
     }
 
 
 
+    public void btnSecretWord_OnClick(View v) throws InterruptedException {
+        editor.putString( "secretWord", tvSecretWord.getText().toString().trim());
+        editor.commit();
+        Toast.makeText(getApplicationContext(), "Secret word saved", Toast.LENGTH_SHORT).show();
+    }
+
+
+
     public void registerBroadcastReceiver() {
-        this.registerReceiver(smsReceiver, new IntentFilter(
-                "android.provider.Telephony.SMS_RECEIVED"));
-        Toast.makeText(getApplicationContext(), "Started",
-                Toast.LENGTH_SHORT).show();
+        this.registerReceiver(smsReceiver, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
         isServiceRunning = true;
     }
 
@@ -98,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void unregisterBroadcastReceiver() {
         this.unregisterReceiver(smsReceiver);
-        Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_SHORT).show();
         isServiceRunning = false;
     }
 

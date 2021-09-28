@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SendLocationSmsByRequest">
 
-        <!-- это значит, что приемник работает даже если приложение не запущено -->
+        <!-- Автозагрузка broadcast receiver. Это значит, что приемник работает даже если приложение не запущено -->
         <!--
                 <receiver
                     android:name="com.example.sendlocationsmsbyrequest.SmsReceiver"

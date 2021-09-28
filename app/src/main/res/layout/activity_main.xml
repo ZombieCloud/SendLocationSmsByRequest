@@ -4,16 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnSecretWord"
+        android:layout_width="354dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="btnSecretWord_OnClick"
+        android:text="Save secret word"
+        app:layout_constraintBottom_toTopOf="@+id/btnStartStop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnStartStop"
-        android:layout_width="355dp"
-        android:layout_height="59dp"
+        android:layout_width="354dp"
+        android:layout_height="74dp"
         android:layout_marginBottom="16dp"
         android:onClick="btnStartStop_OnClick"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSecretWord"
+        style="@style/Widget.AppCompat.TextView"
+        android:layout_width="354dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/back"
+        android:cursorVisible="true"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="auto"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:text="put secret word here"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSecretWord"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
