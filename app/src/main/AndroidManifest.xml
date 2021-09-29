@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SendLocationSmsByRequest">
 
-        <!-- Автозагрузка broadcast receiver. Это значит, что приемник работает даже если приложение не запущено -->
-        <!--
+
+        <!-- Автозагрузка broadcast receiver. Это значит, что приемник смс работает даже если приложение не запущено -->
                 <receiver
                     android:name="com.example.sendlocationsmsbyrequest.SmsReceiver"
                     android:enabled="true"
@@ -24,9 +24,9 @@
                         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
                     </intent-filter>
                 </receiver>
-        -->
-                <meta-data android:name="com.google.android.gms.version"
-                    />
+
+
+                <meta-data android:name="com.google.android.gms.version"/>
 
                 <activity android:name="com.example.sendlocationsmsbyrequest.MainActivity">
                     <intent-filter>

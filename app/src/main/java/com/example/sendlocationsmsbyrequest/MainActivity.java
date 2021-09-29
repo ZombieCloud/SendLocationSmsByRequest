@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences settings;             // хранилище переменных
     private SharedPreferences.Editor editor;
     private String secretWord;
+    private String sendResponse;
 
 
     @Override
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //        btnStartStop.setText("Start");
 //        isServiceRunning = false;
 
-        settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_PRIVATE);  // инициируем хранилище переменных
+        settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных   MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
         editor = settings.edit();
 
         //  Достаем secretWord из хранилища
@@ -54,7 +55,14 @@ public class MainActivity extends AppCompatActivity {
         tvSecretWord.setText(secretWord);
 
         //  Достаем слатьОтвет из хранилища
-        if (settings.getString("sendResponse", null).equals("1")) {
+        sendResponse = settings.getString("sendResponse", null);
+        if (sendResponse == null) {
+            editor.putString("sendResponse", "0");// положить переменную в хранилище
+            editor.commit();
+            sendResponse = settings.getString("sendResponse", null);
+        }
+
+        if (sendResponse.equals("1")) {
             isServiceRunning = true;
             btnStartStop.setText("Stop");
         } else {
@@ -112,12 +120,14 @@ public class MainActivity extends AppCompatActivity {
             editor.commit();
             btnStartStop.setText("Start");
             Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_SHORT).show();
+            isServiceRunning = false;
         } else {
 //            registerBroadcastReceiver();     // так можно запустить broadcast receiver из activity. Жить будет пока жива activity
             editor.putString( "sendResponse", "1");
             editor.commit();
             btnStartStop.setText("Stop");
             Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
+            isServiceRunning = true;
         }
     }
 
@@ -130,14 +140,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    //  Не используется. Для ручного старта broadcast receiver
     public void registerBroadcastReceiver() {
         this.registerReceiver(smsReceiver, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
         isServiceRunning = true;
     }
 
 
-
+    //  Не используется. Для ручного стопа broadcast receiver
     public void unregisterBroadcastReceiver() {
         this.unregisterReceiver(smsReceiver);
         isServiceRunning = false;

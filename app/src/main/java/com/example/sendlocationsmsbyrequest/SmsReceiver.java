@@ -4,16 +4,21 @@ import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
+import android.content.SharedPreferences;
+
 
 public class SmsReceiver extends BroadcastReceiver {
 
     private static final String TAG = SmsReceiver.class.getSimpleName();
     public static final String pdu_type = "pdus";
+
+    private SharedPreferences settings;             // хранилище переменных
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -51,13 +56,25 @@ public class SmsReceiver extends BroadcastReceiver {
                     strMessage += " :" + msgs[i].getMessageBody() + "\n";
 
                     // display the SMS message.
-                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
 
                     // определяем координаты и ответная смс
-                    String keyString = "WhereAreYouuu";
-                    if (msgs[i].getMessageBody().toLowerCase().contains(keyString.toLowerCase())) {
-                        GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context);
+                    try {
+                        settings = context.getSharedPreferences("SLSbR_STORAGE", Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных      MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
+                        String keyString = settings.getString( "secretWord", null);    // достаем переменную из хранилища
+//                        Toast.makeText(context, keyString, Toast.LENGTH_LONG).show();
+                        String sendResponse = settings.getString("sendResponse", null);
+//                        Toast.makeText(context, sendResponse, Toast.LENGTH_LONG).show();
+                        if (msgs[i].getMessageBody().toLowerCase().contains(keyString.toLowerCase())) {
+                            if (sendResponse == "1") {
+                                Toast.makeText(context, keyString, Toast.LENGTH_LONG).show();
+//                                GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context);
+                            }
+                        }
+                    } catch (Exception e) {
+                        //  хранилища или переменных может и не быть. Оно все должно создаться из activity
                     }
+
                 }
         }
 
