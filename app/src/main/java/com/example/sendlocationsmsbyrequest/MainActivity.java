@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnStartStop;
     TextView tvSecretWord;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private SmsReceiver smsReceiver = new SmsReceiver();
+    private final SmsReceiver smsReceiver = new SmsReceiver();
     private Boolean isServiceRunning;
-    private int MY_KEY_FOR_RETURNED_VALUE = 0;
+    private final int MY_KEY_FOR_RETURNED_VALUE = 0;
     private SharedPreferences settings;             // хранилище переменных
     private SharedPreferences.Editor editor;
     private String secretWord;
@@ -38,19 +38,29 @@ public class MainActivity extends AppCompatActivity {
 
         btnStartStop = findViewById(R.id.btnStartStop);
         tvSecretWord = findViewById(R.id.tvSecretWord);
-        btnStartStop.setText("Start");
-        isServiceRunning = false;
+//        btnStartStop.setText("Start");
+//        isServiceRunning = false;
 
         settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_PRIVATE);  // инициируем хранилище переменных
         editor = settings.edit();
-        secretWord = settings.getString( "secretWord", null);    // достаем переменную из хранилища
 
+        //  Достаем secretWord из хранилища
+        secretWord = settings.getString( "secretWord", null);    // достаем переменную из хранилища
         if (secretWord == null) {
             editor.putString( "secretWord", "put secret word here");   // положить переменную в хранилище
             editor.commit();
             secretWord = "put secret word here";
         }
         tvSecretWord.setText(secretWord);
+
+        //  Достаем слатьОтвет из хранилища
+        if (settings.getString("sendResponse", null).equals("1")) {
+            isServiceRunning = true;
+            btnStartStop.setText("Stop");
+        } else {
+            isServiceRunning = false;
+            btnStartStop.setText("Start");
+        }
     }
 
 
@@ -98,10 +108,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (isServiceRunning) {
 //            unregisterBroadcastReceiver();       // так можно остановить broadcast receiver, запущенный из activity
+            editor.putString( "sendResponse", "0");
+            editor.commit();
             btnStartStop.setText("Start");
             Toast.makeText(getApplicationContext(), "Stopped", Toast.LENGTH_SHORT).show();
         } else {
 //            registerBroadcastReceiver();     // так можно запустить broadcast receiver из activity. Жить будет пока жива activity
+            editor.putString( "sendResponse", "1");
+            editor.commit();
             btnStartStop.setText("Stop");
             Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
         }
