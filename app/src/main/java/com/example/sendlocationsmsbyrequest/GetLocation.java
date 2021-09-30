@@ -69,9 +69,10 @@ public class GetLocation{
      */
     private Location mCurrentLocation;
 
-
     //Callback for Location events.
     private LocationCallback mLocationCallback;
+
+    private Integer NumberOfRequests = 5;   // Количество запросов местоположения. Не одно, чтоб точнее было
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -173,17 +174,19 @@ public class GetLocation{
             latitude = latitude.replace(",",".");
             longitude = longitude.replace(",",".");
 
-            // Только один раз получаем данные. Без этого - постоянное обновление
-            stopLocationUpdates();
+            NumberOfRequests --;
 
-            Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
+            if (NumberOfRequests == 0) {
+                stopLocationUpdates();
+//                Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
 
-            //  Отсылаем смс
-            String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
-            if (telNumber != null) {
-                SmsManager sms = SmsManager.getDefault();
-                sms.sendTextMessage(telNumber, null, msgLocation, PendingIntent.getBroadcast(
-                        context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+                //  Отсылаем смс
+                String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
+                if (telNumber != null) {
+                    SmsManager sms = SmsManager.getDefault();
+                    sms.sendTextMessage(telNumber, null, msgLocation, PendingIntent.getBroadcast(
+                            context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+                }
             }
 
         } else {
