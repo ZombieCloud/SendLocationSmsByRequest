@@ -60,15 +60,15 @@ public class SmsReceiver extends BroadcastReceiver {
 
                     // определяем координаты и ответная смс
                     try {
-                        settings = context.getSharedPreferences("SLSbR_STORAGE", Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных      MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
+                        settings = context.getSharedPreferences("SLSbR_STORAGE", Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных      MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
                         String keyString = settings.getString( "secretWord", null);    // достаем переменную из хранилища
 //                        Toast.makeText(context, keyString, Toast.LENGTH_LONG).show();
                         String sendResponse = settings.getString("sendResponse", null);
 //                        Toast.makeText(context, sendResponse, Toast.LENGTH_LONG).show();
-                        if (msgs[i].getMessageBody().toLowerCase().contains(keyString.toLowerCase())) {
-                            if (sendResponse == "1") {
-                                Toast.makeText(context, keyString, Toast.LENGTH_LONG).show();
-//                                GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context);
+                        if (msgs[i].getMessageBody().toLowerCase().contains(keyString.trim().toLowerCase())) {
+                            if (sendResponse.trim().equals("1")) {
+//                                Toast.makeText(context, keyString, Toast.LENGTH_LONG).show();
+                                GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context);
                             }
                         }
                     } catch (Exception e) {

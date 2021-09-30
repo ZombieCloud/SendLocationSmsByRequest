@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //        btnStartStop.setText("Start");
 //        isServiceRunning = false;
 
-        settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных   MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
+        settings = this.getSharedPreferences("SLSbR_STORAGE", Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);  // инициируем хранилище переменных   MODE_MULTI_PROCESS - чтоб было доступно из broadcast receiver
         editor = settings.edit();
 
         //  Достаем secretWord из хранилища
