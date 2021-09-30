@@ -176,9 +176,9 @@ public class GetLocation{
 
             NumberOfRequests --;
 
-            if (NumberOfRequests == 0) {
+            if (NumberOfRequests <= 0) {
                 stopLocationUpdates();
-//                Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
 
                 //  Отсылаем смс
                 String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
