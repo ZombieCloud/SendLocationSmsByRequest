@@ -72,7 +72,7 @@ public class GetLocation{
     //Callback for Location events.
     private LocationCallback mLocationCallback;
 
-    private Integer NumberOfRequests = 5;   // Количество запросов местоположения. Не одно, чтоб точнее было
+    private Integer NumberOfRequests = 4;   // Количество запросов местоположения. Не одно, чтоб точнее было
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -88,10 +88,12 @@ public class GetLocation{
 
     public String telNumber;
     public Context context;
-    public GetLocation(String telNumber1, Context context1) {
+    public String keyString;
+    public GetLocation(String telNumber1, Context context1, String keyString1) {
 
         telNumber = telNumber1;
         context = context1;
+        keyString = keyString1;
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         mSettingsClient = LocationServices.getSettingsClient(context);
@@ -173,25 +175,32 @@ public class GetLocation{
             longitude = String.format("%f", mCurrentLocation.getLongitude());
             latitude = latitude.replace(",",".");
             longitude = longitude.replace(",",".");
+            Toast.makeText(context, "Location ok " + NumberOfRequests.toString(), Toast.LENGTH_LONG).show();
 
-            NumberOfRequests --;
+            NumberOfRequests = NumberOfRequests - 1;
 
             if (NumberOfRequests <= 0) {
                 stopLocationUpdates();
                 Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
 
                 //  Отсылаем смс
-                String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
-                if (telNumber != null) {
-                    SmsManager sms = SmsManager.getDefault();
-                    sms.sendTextMessage(telNumber, null, msgLocation, PendingIntent.getBroadcast(
-                            context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+                if (!keyString.equals("zzzzzzzzzz")) {
+                    String msgLocation = "http://maps.google.com/?q=" + latitude + "," + longitude;
+                    if (telNumber != null) {
+                        SmsManager sms = SmsManager.getDefault();
+                        sms.sendTextMessage(telNumber, null, msgLocation, PendingIntent.getBroadcast(
+                                context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+                    }
                 }
+            } else {
+                Toast.makeText(context, "Next location " + NumberOfRequests.toString(), Toast.LENGTH_LONG).show();
+                stopLocationUpdates();
+                startUpdatesButtonHandler();
             }
 
         } else {
 //            Log.i(TAG, "No location");   // Сюда сначала попадает, а потом определяет
-//            Toast.makeText(mainActivity, "No location", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "No location", Toast.LENGTH_LONG).show();
         }
     }
 
