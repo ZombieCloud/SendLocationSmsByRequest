@@ -37,7 +37,7 @@ public class GetLocation{
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 50000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -72,14 +72,13 @@ public class GetLocation{
     //Callback for Location events.
     private LocationCallback mLocationCallback;
 
-    private Integer NumberOfRequests = 4;   // Количество запросов местоположения. Не одно, чтоб точнее было
+    private Integer NumberOfRequests = 5;   // Количество запросов местоположения. Не одно, чтоб точнее было
+    private Boolean SmsSent = false;   // Чтоб 2 смс не слались. updateLocationUI() вызывается в startLocationUpdates()  и  в  createLocationCallback()
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
      * Start Updates and Stop Updates buttons.
      */
-    private Boolean mRequestingLocationUpdates;
-
 
     public String latitude = "";
     public String longitude = "";
@@ -99,7 +98,6 @@ public class GetLocation{
         mSettingsClient = LocationServices.getSettingsClient(context);
 
 //        mLastUpdateTime = "";
-        mRequestingLocationUpdates = false;
 
         // Kick off the process of building the LocationCallback, LocationRequest, and
         // LocationSettingsRequest objects.
@@ -108,18 +106,10 @@ public class GetLocation{
         buildLocationSettingsRequest();
 
         // START
-        startUpdatesButtonHandler();
+        startLocationUpdates();
     }
 
 
-
-
-    public void startUpdatesButtonHandler() {
-        if (!mRequestingLocationUpdates) {
-            mRequestingLocationUpdates = true;
-            startLocationUpdates();
-        }
-    }
 
 
     private void startLocationUpdates() {
@@ -136,7 +126,7 @@ public class GetLocation{
                         mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                                 mLocationCallback, Looper.myLooper());
 
-                        updateUI();
+                        updateLocationUI();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -153,7 +143,6 @@ public class GetLocation{
                                 sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
                                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
 
-                                mRequestingLocationUpdates = false;
                                 break;
                         }
                     }
@@ -161,10 +150,6 @@ public class GetLocation{
                 );
     }
 
-
-    private void updateUI() {
-        updateLocationUI();
-    }
 
 
     private void updateLocationUI() {
@@ -177,9 +162,8 @@ public class GetLocation{
             longitude = longitude.replace(",",".");
             Toast.makeText(context, "Location ok " + NumberOfRequests.toString(), Toast.LENGTH_LONG).show();
 
-            NumberOfRequests = NumberOfRequests - 1;
-
-            if (NumberOfRequests <= 0) {
+            if (NumberOfRequests <= 0 && !SmsSent) {
+                SmsSent = true;
                 stopLocationUpdates();
                 Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
 
@@ -193,9 +177,16 @@ public class GetLocation{
                     }
                 }
             } else {
+                NumberOfRequests = NumberOfRequests - 1;
+
                 Toast.makeText(context, "Next location " + NumberOfRequests.toString(), Toast.LENGTH_LONG).show();
                 stopLocationUpdates();
-                startUpdatesButtonHandler();
+
+                if (!SmsSent) {
+                    createLocationCallback();
+                    createLocationRequest();
+                    startLocationUpdates();
+                }
             }
 
         } else {
@@ -248,11 +239,7 @@ public class GetLocation{
 
 
     private void stopLocationUpdates() {
-        if (!mRequestingLocationUpdates) {
-            return;
-        }
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        mRequestingLocationUpdates = false;
     }
 
 
