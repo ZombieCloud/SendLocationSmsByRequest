@@ -69,6 +69,7 @@ public class SmsReceiver extends BroadcastReceiver {
                             if (sendResponse.trim().equals("1")) {
                                 Toast.makeText(context, "go location", Toast.LENGTH_LONG).show();
                                 GetLocation gl = new GetLocation(msgs[i].getOriginatingAddress(), context, keyString);
+                                gl = null;
                             }
                         }
                     } catch (Exception e) {

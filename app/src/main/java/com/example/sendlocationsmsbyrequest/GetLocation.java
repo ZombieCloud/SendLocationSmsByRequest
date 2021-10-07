@@ -37,7 +37,7 @@ public class GetLocation{
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 50000;
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 4000;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
@@ -123,9 +123,7 @@ public class GetLocation{
                         Log.i(TAG, "All location settings are satisfied.");
 
                         //noinspection MissingPermission
-                        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                                mLocationCallback, Looper.myLooper());
-
+                        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());     //  getCurrentLocation  https://developer.android.com/training/location/retrieve-current
                         updateLocationUI();
                     }
                 })
@@ -185,6 +183,7 @@ public class GetLocation{
                 if (!SmsSent) {
                     createLocationCallback();
                     createLocationRequest();
+//                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     startLocationUpdates();
                 }
             }
