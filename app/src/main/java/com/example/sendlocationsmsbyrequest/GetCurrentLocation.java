@@ -72,7 +72,7 @@ public class GetCurrentLocation {
 
     public String latitude = "";
     public String longitude = "";
-    public String mLastUpdateTime = "";
+    public Integer attemptionCount = 5;
 
 
     public String telNumber;
@@ -85,11 +85,6 @@ public class GetCurrentLocation {
         context = context1;
         keyString = keyString1;
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-        mSettingsClient = LocationServices.getSettingsClient(context);
-
-        buildLocationSettingsRequest();   //  МОЖНО ОБОЙТИСЬ БЕЗ ВСЕГО СВЯЗАННОГО С  mSettingsClient,  buildLocationSettingsRequest
-
         // START
         startLocationUpdates();
     }
@@ -97,6 +92,11 @@ public class GetCurrentLocation {
 
 //  МОЖНО ОБОЙТИСЬ БЕЗ ВСЕГО СВЯЗАННОГО С  mSettingsClient,  buildLocationSettingsRequest
     private void startLocationUpdates() {
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        mSettingsClient = LocationServices.getSettingsClient(context);
+        buildLocationSettingsRequest();   //  МОЖНО ОБОЙТИСЬ БЕЗ ВСЕГО СВЯЗАННОГО С  mSettingsClient,  buildLocationSettingsRequest
+
         // Begin by checking if the device has the necessary location settings.
         mSettingsClient = LocationServices.getSettingsClient(context);
 
@@ -119,6 +119,19 @@ public class GetCurrentLocation {
                                         mCurrentLocation = location;
                                         updateLocationUI();
                                     }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        attemptionCount--;
+                                        if (attemptionCount >= 0) {
+                                            startLocationUpdates();
+                                        } else {
+                                            SmsManager sms = SmsManager.getDefault();
+                                            sms.sendTextMessage(telNumber, null, "Couldn't get location. Try later", PendingIntent.getBroadcast(
+                                                    context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+                                        }
+                                    }
                                 });
                     }
                 })
@@ -127,7 +140,6 @@ public class GetCurrentLocation {
                     public void onFailure(@NonNull Exception e) {
 
                         SmsManager sms = SmsManager.getDefault();
-
                         int statusCode = ((ApiException) e).getStatusCode();
                         switch (statusCode) {
                             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
