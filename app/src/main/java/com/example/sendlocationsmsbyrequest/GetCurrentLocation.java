@@ -61,7 +61,7 @@ public class GetCurrentLocation {
     /**
      * Represents a geographical location.
      */
-    private Location mCurrentLocation;
+    private Location mCurrentLocation = null;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -72,7 +72,7 @@ public class GetCurrentLocation {
 
     public String latitude = "";
     public String longitude = "";
-    public Integer attemptionCount = 5;
+    public Integer attemptionCount = 15;
 
 
     public String telNumber;
@@ -147,8 +147,6 @@ public class GetCurrentLocation {
 
                                 sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
                                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
-
-                                break;
                         }
                     }
                 }
@@ -176,6 +174,8 @@ public class GetCurrentLocation {
                             context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
 
                     Toast.makeText(context, "Location sent", Toast.LENGTH_LONG).show();
+
+                    mCurrentLocation = null;
                 }
             } else {
                 Toast.makeText(context, "Latitude = " + latitude + "     " + "Longitude = " + longitude + "    " + "Tel = " + telNumber, Toast.LENGTH_LONG).show();
@@ -184,7 +184,16 @@ public class GetCurrentLocation {
 
         } else {
 //            Log.i(TAG, "No location");   // Сюда сначала попадает, а потом определяет
-            Toast.makeText(context, "No location", Toast.LENGTH_LONG).show();
+            attemptionCount--;
+            if (attemptionCount >= 0) {
+                startLocationUpdates();
+            } else {
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(telNumber, null, "Got no location. Try later", PendingIntent.getBroadcast(
+                        context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+
+                Toast.makeText(context, "Got no location", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
