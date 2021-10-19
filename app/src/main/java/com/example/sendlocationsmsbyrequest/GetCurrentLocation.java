@@ -61,7 +61,7 @@ public class GetCurrentLocation {
     /**
      * Represents a geographical location.
      */
-    private Location mCurrentLocation = null;
+    private Location mCurrentLocation;
 
     /**
      * Tracks the status of the location updates request. Value changes when the user presses the
@@ -72,7 +72,7 @@ public class GetCurrentLocation {
 
     public String latitude = "";
     public String longitude = "";
-    public Integer attemptionCount = 15;
+    public Integer attemptionCount;
 
 
     public String telNumber;
@@ -84,6 +84,8 @@ public class GetCurrentLocation {
         telNumber = telNumber1;
         context = context1;
         keyString = keyString1;
+        attemptionCount = 15;
+        mCurrentLocation = null;
 
         // START
         startLocationUpdates();
@@ -108,7 +110,11 @@ public class GetCurrentLocation {
 
                         //noinspection MissingPermission
                         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {      //    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            Toast.makeText(context, "Bad permissions", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(context, "Bad permissions", Toast.LENGTH_LONG).show();
+                            SmsManager sms = SmsManager.getDefault();
+                            sms.sendTextMessage(telNumber, null, "Bad permissions", PendingIntent.getBroadcast(
+                                    context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
+
                             return;
                         }
 
@@ -140,14 +146,14 @@ public class GetCurrentLocation {
                     public void onFailure(@NonNull Exception e) {
 
                         SmsManager sms = SmsManager.getDefault();
-                        int statusCode = ((ApiException) e).getStatusCode();
-                        switch (statusCode) {
-                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+//                        int statusCode = ((ApiException) e).getStatusCode();
+//                        switch (statusCode) {
+//                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+//                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
 
                                 sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
                                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
-                        }
+//                        }
                     }
                 }
                 );
