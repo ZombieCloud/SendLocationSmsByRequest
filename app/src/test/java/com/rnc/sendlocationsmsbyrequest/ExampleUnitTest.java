@@ -1,4 +1,4 @@
-package com.example.sendlocationsmsbyrequest;
+package com.rnc.sendlocationsmsbyrequest;
 
 import org.junit.Test;
 

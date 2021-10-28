@@ -1,4 +1,4 @@
-package com.example.sendlocationsmsbyrequest;
+package com.rnc.sendlocationsmsbyrequest;
 
 import android.app.PendingIntent;
 import android.content.Context;

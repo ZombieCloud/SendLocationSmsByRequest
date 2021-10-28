@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sendlocationsmsbyrequest">
+    package="com.rnc.sendlocationsmsbyrequest">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
@@ -19,7 +19,7 @@
 
         <!-- Автозагрузка broadcast receiver. Это значит, что приемник смс работает даже если приложение не запущено -->
                 <receiver
-                    android:name="com.example.sendlocationsmsbyrequest.SmsReceiver"
+                    android:name="com.rnc.sendlocationsmsbyrequest.SmsReceiver"
                     android:enabled="true"
                     android:exported="true">
                     <intent-filter>
@@ -30,7 +30,7 @@
 
                 <meta-data android:name="com.google.android.gms.version"/>
 
-                <activity android:name="com.example.sendlocationsmsbyrequest.MainActivity">
+                <activity android:name="com.rnc.sendlocationsmsbyrequest.MainActivity">
                     <intent-filter>
                         <action android:name="android.intent.action.MAIN" />
                         <category android:name="android.intent.category.LAUNCHER" />
