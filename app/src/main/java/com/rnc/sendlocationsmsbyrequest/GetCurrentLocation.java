@@ -195,10 +195,10 @@ public class GetCurrentLocation {
                 startLocationUpdates();
             } else {
                 SmsManager sms = SmsManager.getDefault();
-                sms.sendTextMessage(telNumber, null, "Got no location. Try later", PendingIntent.getBroadcast(
+                sms.sendTextMessage(telNumber, null, "Device did not get location. Try later", PendingIntent.getBroadcast(
                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
 
-                Toast.makeText(context, "Got no location", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Device did not get location", Toast.LENGTH_LONG).show();
             }
         }
     }
