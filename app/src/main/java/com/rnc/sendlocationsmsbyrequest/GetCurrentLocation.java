@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Looper;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -84,10 +85,12 @@ public class GetCurrentLocation {
         telNumber = telNumber1;
         context = context1;
         keyString = keyString1;
-        attemptionCount = 15;
+        attemptionCount = 30;
         mCurrentLocation = null;
 
+
         // START
+//        startGoogleMaps();
         startLocationUpdates();
     }
 
@@ -131,6 +134,12 @@ public class GetCurrentLocation {
                                     public void onFailure(@NonNull Exception e) {
                                         attemptionCount--;
                                         if (attemptionCount >= 0) {
+
+                                            //   start google map
+                                            if (attemptionCount < 20) {
+                                                startGoogleMaps();
+                                            }
+
                                             startLocationUpdates();
                                         } else {
                                             SmsManager sms = SmsManager.getDefault();
@@ -192,6 +201,12 @@ public class GetCurrentLocation {
 //            Log.i(TAG, "No location");   // Сюда сначала попадает, а потом определяет
             attemptionCount--;
             if (attemptionCount >= 0) {
+
+                //   start google map
+                if (attemptionCount < 20) {
+                    startGoogleMaps();
+                }
+
                 startLocationUpdates();
             } else {
                 SmsManager sms = SmsManager.getDefault();
@@ -210,6 +225,19 @@ public class GetCurrentLocation {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
         builder.addLocationRequest(mLocationRequest);
         mLocationSettingsRequest = builder.build();
+    }
+
+
+
+    private void startGoogleMaps() {
+        try {
+            String uri = "https://www.google.com/maps/@?api=1&map_action=map";
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Couldn't start google maps", Toast.LENGTH_LONG).show();
+        }
+
     }
 
 }
