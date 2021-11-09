@@ -74,6 +74,7 @@ public class GetCurrentLocation {
     public String latitude = "";
     public String longitude = "";
     public Integer attemptionCount;
+    public Integer attemptionCountLeftForStartingMaps;
 
 
     public String telNumber;
@@ -85,7 +86,8 @@ public class GetCurrentLocation {
         telNumber = telNumber1;
         context = context1;
         keyString = keyString1;
-        attemptionCount = 30;
+        attemptionCount = 20;
+        attemptionCountLeftForStartingMaps = 15;
         mCurrentLocation = null;
 
 
@@ -97,6 +99,8 @@ public class GetCurrentLocation {
 
 //  МОЖНО ОБОЙТИСЬ БЕЗ ВСЕГО СВЯЗАННОГО С  mSettingsClient,  buildLocationSettingsRequest
     private void startLocationUpdates() {
+
+        Toast.makeText(context, attemptionCount.toString(), Toast.LENGTH_LONG).show();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         mSettingsClient = LocationServices.getSettingsClient(context);
@@ -136,7 +140,7 @@ public class GetCurrentLocation {
                                         if (attemptionCount >= 0) {
 
                                             //   start google map
-                                            if (attemptionCount < 20) {
+                                            if (attemptionCount == attemptionCountLeftForStartingMaps) {
                                                 startGoogleMaps();
                                             }
 
@@ -155,12 +159,7 @@ public class GetCurrentLocation {
                     public void onFailure(@NonNull Exception e) {
 
                         SmsManager sms = SmsManager.getDefault();
-//                        int statusCode = ((ApiException) e).getStatusCode();
-//                        switch (statusCode) {
-//                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-//                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-
-                                sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
+                        sms.sendTextMessage(telNumber, null, "Check app permissions, or Turn on location, or No location sources are available", PendingIntent.getBroadcast(
                                         context, 0, new Intent(SMS_SENT_ACTION), 0), PendingIntent.getBroadcast(context, 0, new Intent(SMS_DELIVERED_ACTION), 0));
 //                        }
                     }
@@ -203,7 +202,7 @@ public class GetCurrentLocation {
             if (attemptionCount >= 0) {
 
                 //   start google map
-                if (attemptionCount < 20) {
+                if (attemptionCount == attemptionCountLeftForStartingMaps) {
                     startGoogleMaps();
                 }
 
@@ -233,9 +232,11 @@ public class GetCurrentLocation {
         try {
             String uri = "https://www.google.com/maps/@?api=1&map_action=map";
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(context, "Couldn't start google maps", Toast.LENGTH_LONG).show();
+//            Log.i("Exception caught",e.getMessage());
         }
 
     }

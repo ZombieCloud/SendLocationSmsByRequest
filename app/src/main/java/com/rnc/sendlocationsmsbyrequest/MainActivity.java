@@ -84,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         // проверить, включена ли отсылка sms
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.SEND_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 // permission is not granted, ask for permission:
                 requestPermissions(new String[] { Manifest.permission.SEND_SMS}, MY_KEY_FOR_RETURNED_VALUE);
                 return;
@@ -93,25 +92,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // проверить, включен ли прием sms
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.RECEIVE_SMS)
-                    != PackageManager.PERMISSION_GRANTED) {
+/*        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED) {
                 // permission is not granted, ask for permission:
                 requestPermissions(new String[] { Manifest.permission.RECEIVE_SMS}, MY_KEY_FOR_RETURNED_VALUE);
                 return;
             }
-        }
+        }*/
 
         // проверить, включено ли определение местоположения
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // permission is not granted, ask for permission:
                 requestPermissions(new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, MY_KEY_FOR_RETURNED_VALUE);
                 return;
             }
         }
 
+        // проверить, включено ли определение местоположение  в фоновом режиме
+/*        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // permission is not granted, ask for permission:
+                requestPermissions(new String[] { Manifest.permission.ACCESS_BACKGROUND_LOCATION}, MY_KEY_FOR_RETURNED_VALUE);
+                return;
+            }
+        }*/
 
 
         if (isServiceRunning) {

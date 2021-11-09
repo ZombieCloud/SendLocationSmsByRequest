@@ -56,7 +56,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     strMessage += " :" + msgs[i].getMessageBody() + "\n";
 
                     // display the SMS message.
-//                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
 
                     // определяем координаты и ответная смс
                     try {
@@ -80,7 +80,7 @@ public class SmsReceiver extends BroadcastReceiver {
         }
 
         } catch(Exception e) {
-                            Log.d("Exception caught",e.getMessage());
+                            Log.i("Exception caught",e.getMessage());
         }
 
     }
