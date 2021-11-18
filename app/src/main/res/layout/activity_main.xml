@@ -52,7 +52,7 @@
 
     <View
         android:id="@+id/divider"
-        android:layout_width="379dp"
+        android:layout_width="354dp"
         android:layout_height="3dp"
         android:layout_marginBottom="12dp"
         android:background="?android:attr/listDivider"
@@ -61,10 +61,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/checkBox_LaunchMaps"
         android:layout_width="354dp"
         android:layout_height="42dp"
         android:layout_marginBottom="22dp"
+        android:onClick="checkBox_LaunchMaps_OnClick"
         android:text="Launch maps immediately"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -73,26 +74,28 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/checkBox_ScreenOn"
         android:layout_width="354dp"
         android:layout_height="42dp"
         android:layout_marginBottom="11dp"
+        android:onClick="checkBox_ScreenOn_OnClick"
         android:text="Keep the screen on"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintBottom_toTopOf="@+id/checkBox_LaunchMaps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/checkBox_WakeUp"
         android:layout_width="354dp"
         android:layout_height="42dp"
         android:layout_marginBottom="11dp"
+        android:onClick="checkBox_WakeUp_OnClick"
         android:text="Wake up device"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox2"
+        app:layout_constraintBottom_toTopOf="@+id/checkBox_ScreenOn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
