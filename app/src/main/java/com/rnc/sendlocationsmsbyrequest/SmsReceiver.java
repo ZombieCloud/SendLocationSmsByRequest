@@ -56,7 +56,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     strMessage += " :" + msgs[i].getMessageBody() + "\n";
 
                     // display the SMS message.
-                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, strMessage, Toast.LENGTH_LONG).show();
 
                     // определяем координаты и ответная смс
                     try {
@@ -67,8 +67,9 @@ public class SmsReceiver extends BroadcastReceiver {
 //                        Toast.makeText(context, sendResponse, Toast.LENGTH_LONG).show();
                         if (msgs[i].getMessageBody().toLowerCase().contains(keyString)) {
                             if (sendResponse.trim().equals("1")) {
+                                String stLaunchMaps = settings.getString("state_LaunchMaps", null);
                                 Toast.makeText(context, "go location", Toast.LENGTH_LONG).show();
-                                GetCurrentLocation gcl = new GetCurrentLocation(msgs[i].getOriginatingAddress(), context, keyString);
+                                GetCurrentLocation gcl = new GetCurrentLocation(msgs[i].getOriginatingAddress(), context, keyString, stLaunchMaps);
                                 gcl = null;
                             }
                         }

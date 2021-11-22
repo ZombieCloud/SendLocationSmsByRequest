@@ -1,8 +1,12 @@
 package com.rnc.sendlocationsmsbyrequest;
 
-import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 
+import static android.os.PowerManager.ACQUIRE_CAUSES_WAKEUP;
+import static android.os.PowerManager.FULL_WAKE_LOCK;
+import static android.os.PowerManager.SCREEN_BRIGHT_WAKE_LOCK;
+import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 import android.Manifest;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -80,19 +85,26 @@ public class GetCurrentLocation {
     public String telNumber;
     public Context context;
     public String keyString;
+    public String stLaunchMaps;
 
-    public GetCurrentLocation(String telNumber1, Context context1, String keyString1) {
+    //  Конструктор
+    public GetCurrentLocation(String telNumber1, Context context1, String keyString1, String stLaunchMaps1) {
 
         telNumber = telNumber1;
         context = context1;
         keyString = keyString1;
+        stLaunchMaps = stLaunchMaps1;
         attemptionCount = 20;
         attemptionCountLeftForStartingMaps = 15;
         mCurrentLocation = null;
 
 
         // START
-//        startGoogleMaps();
+        if (stLaunchMaps.equals("1")) {
+            wakeUp();
+            startGoogleMaps();
+        }
+
         startLocationUpdates();
     }
 
@@ -140,7 +152,7 @@ public class GetCurrentLocation {
                                         if (attemptionCount >= 0) {
 
                                             //   start google map
-                                            if (attemptionCount == attemptionCountLeftForStartingMaps) {
+                                            if ((attemptionCount == attemptionCountLeftForStartingMaps) && (!stLaunchMaps.equals("1"))) {
                                                 startGoogleMaps();
                                             }
 
@@ -202,7 +214,7 @@ public class GetCurrentLocation {
             if (attemptionCount >= 0) {
 
                 //   start google map
-                if (attemptionCount == attemptionCountLeftForStartingMaps) {
+                if ((attemptionCount == attemptionCountLeftForStartingMaps) && (!stLaunchMaps.equals("1"))) {
                     startGoogleMaps();
                 }
 
@@ -239,6 +251,21 @@ public class GetCurrentLocation {
 //            Log.i("Exception caught",e.getMessage());
         }
 
+    }
+
+
+    //to wake the screen
+    protected void wakeUp() {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = pm.newWakeLock((SCREEN_BRIGHT_WAKE_LOCK | FULL_WAKE_LOCK | ACQUIRE_CAUSES_WAKEUP), "GetCurrentLocation:TAG");
+        wakeLock.acquire();
+        //to release the screen lock
+        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+        //add permission in the manifest file for the disablekeyguard
+        keyguardLock.disableKeyguard();
+        // Intent intent=new Intent("android.intent.category.LAUNCHER");
+        //Intent.setClassName("com.samsung.android.sdk.accessory.example.helloaccessory.provider", "com.samsung.android.sdk.accessory.example.helloaccessory.provider.Main3Activity");
     }
 
 }
