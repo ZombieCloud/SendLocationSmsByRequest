@@ -68,8 +68,9 @@ public class SmsReceiver extends BroadcastReceiver {
                         if (msgs[i].getMessageBody().toLowerCase().contains(keyString)) {
                             if (sendResponse.trim().equals("1")) {
                                 String stLaunchMaps = settings.getString("state_LaunchMaps", null);
+                                String stWakeUp = settings.getString("state_WakeUp", null);
                                 Toast.makeText(context, "go location", Toast.LENGTH_LONG).show();
-                                GetCurrentLocation gcl = new GetCurrentLocation(msgs[i].getOriginatingAddress(), context, keyString, stLaunchMaps);
+                                GetCurrentLocation gcl = new GetCurrentLocation(msgs[i].getOriginatingAddress(), context, keyString, stLaunchMaps, stWakeUp);
                                 gcl = null;
                             }
                         }

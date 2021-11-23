@@ -86,23 +86,33 @@ public class GetCurrentLocation {
     public Context context;
     public String keyString;
     public String stLaunchMaps;
+    public String stWakeUp;
 
     //  Конструктор
-    public GetCurrentLocation(String telNumber1, Context context1, String keyString1, String stLaunchMaps1) {
+    public GetCurrentLocation(String telNumber1, Context context1, String keyString1, String stLaunchMaps1, String stWakeUp1) {
 
         telNumber = telNumber1;
         context = context1;
         keyString = keyString1;
         stLaunchMaps = stLaunchMaps1;
+        stWakeUp = stWakeUp1;
         attemptionCount = 20;
         attemptionCountLeftForStartingMaps = 15;
         mCurrentLocation = null;
 
 
         // START
-        if (stLaunchMaps.equals("1")) {
+        if (stWakeUp.equals("1")) {
             wakeUp();
+        }
+
+        if (stLaunchMaps.equals("1")) {
             startGoogleMaps();
+/*            try {
+                Thread.sleep(15000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }  */
         }
 
         startLocationUpdates();
@@ -264,8 +274,6 @@ public class GetCurrentLocation {
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
         //add permission in the manifest file for the disablekeyguard
         keyguardLock.disableKeyguard();
-        // Intent intent=new Intent("android.intent.category.LAUNCHER");
-        //Intent.setClassName("com.samsung.android.sdk.accessory.example.helloaccessory.provider", "com.samsung.android.sdk.accessory.example.helloaccessory.provider.Main3Activity");
     }
 
 }
