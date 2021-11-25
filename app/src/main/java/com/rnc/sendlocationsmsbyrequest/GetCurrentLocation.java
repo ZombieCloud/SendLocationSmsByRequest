@@ -107,12 +107,8 @@ public class GetCurrentLocation {
         }
 
         if (stLaunchMaps.equals("1")) {
+            Toast.makeText(context, "start maps", Toast.LENGTH_LONG).show();
             startGoogleMaps();
-/*            try {
-                Thread.sleep(15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }  */
         }
 
         startLocationUpdates();
@@ -122,7 +118,7 @@ public class GetCurrentLocation {
 //  МОЖНО ОБОЙТИСЬ БЕЗ ВСЕГО СВЯЗАННОГО С  mSettingsClient,  buildLocationSettingsRequest
     private void startLocationUpdates() {
 
-        Toast.makeText(context, attemptionCount.toString(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, attemptionCount.toString(), Toast.LENGTH_LONG).show();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         mSettingsClient = LocationServices.getSettingsClient(context);
